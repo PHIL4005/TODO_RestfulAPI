@@ -1,7 +1,7 @@
 # TODO_RestfulAPI
 RESTful API for a simple TODO application.
 
-##Deployment
+## Deployment
 1. Install python packages
 ```shell
 sudo pip install -r requirements.txt
@@ -12,7 +12,7 @@ python app.py
 ```
 3. Open swagger UI
 >Browser visit: 127.0.0.1:5000/apidocs
-##Project Structure
+## Project Structure
 | File Name          | Description                                                                 |
 |:-------------------|:----------------------------------------------------------------------------|
 | app.py             | A Flask web server that handles HTTP requests and conducts data persistence |
