@@ -1,0 +1,42 @@
+tags:
+  - member
+summary: "Get all TODOs"
+description: "Get all TODOs from backend"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+responses:
+  200:
+    description: Correct response.
+    schema:
+      $ref: "#/definitions/todoDict"
+  400:
+    description: Bad request
+  404:
+    description: Not found
+  500:
+    description: Internal Server Error
+
+definitions:
+    todoDict:
+      type: "object"
+      properties:
+        todo_ids:
+          type: "integer"
+          todo_id:
+            type: "integer"
+            description: Unique id of a todo
+          task_name:
+            type: "object"
+            description: Summary of this todo
+          description:
+            type: "string"
+            description: Description of this todo
+          due_date:
+            type: "date"
+            description: The due datetime of this todo if status is C else null.
+          status:
+            type: "status"
+            description: I -- in progress, C -- completed, D -- deleted by user
