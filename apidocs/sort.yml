@@ -1,0 +1,35 @@
+summary: "Sort todos by 'status' and/or 'due_date'"
+description: "The server will only response completed todos if 'due_date' is applied"
+tags:
+  - todos
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+post:
+  parameters:
+    - in: body
+      name: todoInfo
+      schema:
+        type: object
+        properties:
+          name:
+            type: boolean
+          due_date:
+            type: boolean
+
+responses:
+  200:
+    description: Correct response.
+    schema:
+      type: "array"
+      items:
+        $ref: '#/definitions/TODO'
+
+  400:
+    description: Bad request
+  404:
+    description: Not found
+  500:
+    description: Internal Server Error

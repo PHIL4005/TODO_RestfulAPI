@@ -1,0 +1,32 @@
+summary: "Filter todos by status and/or name"
+description: "[IMPORTANT] The value of field 'status' can only be 'I' -- In progress, 'C' -- Completed, 'D' -- Deleted by User"
+tags:
+  - todos
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+post:
+  parameters:
+    - in: body
+      name: todoInfo
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          status:
+            type: string
+
+responses:
+  200:
+    description: Correct response.
+    schema:
+      $ref: "#/definitions/TODOs"
+  400:
+    description: Bad request
+  404:
+    description: Not found
+  500:
+    description: Internal Server Error

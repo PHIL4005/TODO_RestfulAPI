@@ -1,0 +1,39 @@
+summary: "Update a todo by ID"
+description: "[IMPORTANT] The value of field 'status' can only be 'I' -- In progress, 'C' -- Completed, 'D' -- Deleted by User"
+tags:
+  - todo
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+put:
+  parameters:
+    - in: path
+      name: todo_id
+      required: true
+      schema:
+        type: integer
+    - in: body
+      name: todoInfo
+      schema:
+        type: object
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+          status:
+            type: string
+
+responses:
+  200:
+    description: Correct response.
+    schema:
+      $ref: "#/definitions/TODO"
+  400:
+    description: Bad request
+  404:
+    description: Not found
+  500:
+    description: Internal Server Error

@@ -1,0 +1,34 @@
+summary: "Create a todo"
+tags:
+  - todo
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+post:
+  parameters:
+    - in: body
+      name: todoInfo
+      schema:
+        type: object
+        required:
+          - name
+          - description
+        properties:
+          name:
+            type: string
+          description:
+            type: string
+
+responses:
+  201:
+    description: Correct response.
+    schema:
+      $ref: "#/definitions/TODO"
+  400:
+    description: Bad request
+  404:
+    description: Not found
+  500:
+    description: Internal Server Error

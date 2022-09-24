@@ -11,7 +11,7 @@ import datetime
 
 
 app = Flask(__name__, static_url_path="")
-Swagger(app, config={"specs_route": "/apidocs/"}, merge=True)
+Swagger(app, config={"specs_route": "/apidocs/", "title": 'A RESTful Todo API'}, merge=True)
 
 # sqlite3 settings
 Base = declarative_base()
@@ -55,6 +55,7 @@ def get_tasks():
 
 # get a todo by id
 @app.route('/todo/tasks/<int:todo_id>', methods=['GET'])
+@swag_from('apidocs/get_todo.yml')
 def get_task(todo_id):
     session = Session()
 
@@ -68,6 +69,7 @@ def get_task(todo_id):
 
 # add a todo
 @app.route('/todo/tasks', methods=['POST'])
+@swag_from('apidocs/create_todo.yml')
 def create_task():
     if not request.json or 'name' not in request.json:
         abort(400)
@@ -90,6 +92,7 @@ def create_task():
 
 # delete a todo (from database) by id
 @app.route('/todo/tasks/<int:todo_id>', methods=['DELETE'])
+@swag_from('apidocs/delete_todo.yml')
 def delete_task(todo_id):
     session = Session()
 
@@ -107,6 +110,7 @@ def delete_task(todo_id):
 
 # update a todo
 @app.route('/todo/tasks/<int:todo_id>', methods=['PUT'])
+@swag_from('apidocs/update_todo.yml')
 def update_task(todo_id):
     if not request.json:
         abort(400)
@@ -141,7 +145,8 @@ def update_task(todo_id):
 
 
 # filtering. param could be 'name' and/or 'status'
-@app.route('/todo/tasks/filter', methods=['GET'])
+@app.route('/todo/tasks/filter', methods=['POST'])
+@swag_from('apidocs/filtering.yml')
 def filtering():
     session = Session()
 
@@ -170,7 +175,8 @@ def filtering():
 
 
 # sort by 'name' and/or 'due_date'
-@app.route('/todo/tasks/sort', methods=['GET'])
+@app.route('/todo/tasks/sort', methods=['POST'])
+@swag_from('apidocs/sort.yml')
 def sort_by():
     session = Session()
 

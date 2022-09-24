@@ -1,7 +1,6 @@
 tags:
-  - member
-summary: "Get all TODOs"
-description: "Get all TODOs from backend"
+  - todos
+summary: "Get all todos"
 consumes:
   - "application/json"
 produces:
@@ -11,7 +10,7 @@ responses:
   200:
     description: Correct response.
     schema:
-      $ref: "#/definitions/todoDict"
+      $ref: "#/definitions/TODOs"
   400:
     description: Bad request
   404:
@@ -20,23 +19,30 @@ responses:
     description: Internal Server Error
 
 definitions:
-    todoDict:
-      type: "object"
-      properties:
-        todo_ids:
-          type: "integer"
-          todo_id:
-            type: "integer"
-            description: Unique id of a todo
-          task_name:
-            type: "object"
-            description: Summary of this todo
-          description:
-            type: "string"
-            description: Description of this todo
-          due_date:
-            type: "date"
-            description: The due datetime of this todo if status is C else null.
-          status:
-            type: "status"
-            description: I -- in progress, C -- completed, D -- deleted by user
+  TODO:
+    type: object
+    properties:
+      todo_id:
+        type: "integer"
+        description: Unique id of a todo
+      task_name:
+        type: "string"
+        description: Summary of this todo
+      description:
+        type: "string"
+        description: Description of this todo
+      due_date:
+        type: "string"
+        description: The **python formatted** due datetime of this todo if status is Completed else null.
+      status:
+        type: "string"
+        description: I -- in progress, C -- completed, D -- deleted by user
+      uri:
+        type: "string"
+        description: I -- in progress, C -- completed, D -- deleted by user
+
+
+  TODOs:
+    type: "object"
+    additionalProperties:
+      $ref: '#/definitions/TODO'
