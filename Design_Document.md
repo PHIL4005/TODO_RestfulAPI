@@ -1,5 +1,5 @@
-#Design document of TODO_RestfulAPI
-##Requirements
+# Design document of TODO_RestfulAPI
+## Requirements
 - Build up a web server to response the HTTP requests for managing TODOs
 - Operations on a TODO:
     - CRUD
@@ -7,7 +7,7 @@
     - Sorting: by **due_date** and/or **status**
 - Data persistent
 
-##Test Cases
+## Test Cases
 | No. | Test case name     | Description                                                                                       | Expect Response                                                            | Sample command (use curl)                                                                                                                |
 |:----|:-------------------|:--------------------------------------------------------------------------------------------------|:---------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------|
 | 1   | Sever connection   | Test if the web server is working.                                                                | 200. message "Hello, World!"                                               | curl -X GET localhost:5000                                                                                                               |
@@ -19,8 +19,8 @@
 | 7   | Get filtered TODOs | Fuzzy search TODOs that contains the required name and/or in the specified status                 | 200. json-formatted TODO dictionary {id_1: {todo_1}, id_2: {todo_2}, ..}   | curl -X POST localhost:5000/todo/tasks/filter -H "Content-Type:application/json" -d '{"status": "D", "name": "water"}'                   |
 | 8   | Get sorted TODOs   | Sort TODOs by due_date and/or status. Only Completed TODO will be returned if sorting by due_date | 200. json-formatted TODO list [{todo_1}, {todo_2}, ..]                     | curl -X POST localhost:5000/todo/tasks/sort -H "Content-Type:application/json" -d '{"name": true, "due_date": true}'                     |
 
-##System Design
+## System Design
 
-###Architecture Diagram
+### Architecture Diagram
 
-###Object 'TODO'
+### Object 'TODO'
