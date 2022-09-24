@@ -11,7 +11,7 @@ sudo pip install -r requirements.txt
 python app.py
 ```
 3. Open swagger UI
->Browser visit: [127.0.0.1:5000/apidocs](127.0.0.1:5000/apidocs)
+>Browser visit: 127.0.0.1:5000/apidocs
 ##Project Structure
 | File Name          | Description                                                                 |
 |:-------------------|:----------------------------------------------------------------------------|
