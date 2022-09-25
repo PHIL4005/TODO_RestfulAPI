@@ -106,8 +106,9 @@ def delete_task(todo_id):
     qry_result.delete()
     session.commit()
     session.close()
-
-    return jsonify({'result': True})
+    # Frontend might make a judgement about this response. Since 204 should not have a response body,
+    # but this flask method must return something together.
+    return make_response("success", 204)
 
 
 # update a todo

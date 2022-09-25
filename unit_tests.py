@@ -111,11 +111,11 @@ class UnitTests(unittest.TestCase):
 
     # def test_delete_task(self):
     #     # need to input an existed todo_id
-    #     taskId =
-    #     response = self.app.delete('/todo/tasks/' + str(taskId), headers=self.auth_header,
+    #     task_id =
+    #     response = self.app.delete('/todo/tasks/' + str(task_id), headers=self.auth_header,
     #                                content_type='application/json')
     #
-    #     self.assertIn("true", response.data)
+    #     self.assertEqual(204, response.status_code)
 
     def test_filter_by_status(self):
         data = {"status": "D"}
