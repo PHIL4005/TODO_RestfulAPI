@@ -22,8 +22,9 @@
 ## System Design
 
 ### Architecture Diagram
-
-### Object 'TODO'
+![image](resourses/Architecture_Diagram.png)
+### Class illustration
+#### TODO
 Properties:
 - id 
   - Type: integer
