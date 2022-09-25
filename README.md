@@ -2,6 +2,7 @@
 RESTful API for a simple TODO application.
 
 ## Deployment
+0. (Optional) Create a python virtual environment
 1. Install python packages
 ```shell
 sudo pip install -r requirements.txt
@@ -17,6 +18,6 @@ python app.py
 |:-------------------|:----------------------------------------------------------------------------|
 | app.py             | A Flask web server that handles HTTP requests and conducts data persistence |
 | data.db            | A SQLite database. Around 10 records are pre-inserted for test              |
-| unit_tests.py      | Test case scripts                                                           |
+| unit_tests.py      | Test case scripts, run by execute: python unit_tests.py                     |
 | Design_Document.md | Design document. Include system architecture and test cases                 |
 | apidocs/*.yml      | Config files for swagger                                                    |

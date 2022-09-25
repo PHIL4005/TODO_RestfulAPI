@@ -24,3 +24,30 @@
 ### Architecture Diagram
 
 ### Object 'TODO'
+Properties:
+- id 
+  - Type: integer
+  - Allow duplicates: false
+  - Nullable: false
+  - Description: Primary key of the TODOs
+- name
+  - Type: string
+  - Allow duplicates: false
+  - Nullable: false
+  - Description: Task name of a todo
+- description
+  - Type: string
+  - Allow duplicates: true
+  - Nullable: true
+  - Description: Task summary of a todo
+- due_date
+  - Type: datetime
+  - Allow duplicates: true
+  - Nullable: true
+  - Description: Due date have value only if the status of a TODO is 'C' or 'D' and had been completed before deletion
+- status
+  - Type: string
+  - Allow duplicates: true
+  - Nullable: false
+  - Values: 'I', 'C', 'D'
+  - Description: Task status. I: in progress, C: completed, D: deleted by user

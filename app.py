@@ -17,6 +17,8 @@ Swagger(app, config={"specs_route": "/apidocs/", "title": 'A RESTful Todo API'},
 Base = declarative_base()
 engine = create_engine('sqlite:///data.db', echo=False)
 Session = sessionmaker(bind=engine)
+# create table [todos]
+# Base.metadata.create_all(engine, checkfirst=True)
 
 
 # orm object for CRUDs
@@ -135,8 +137,7 @@ def update_task(todo_id):
             'description': description,
             'status': status,
             'due_date': due_date
-        }
-    )
+        })
     session.commit()
     ret = package_task(qry_result.first())
     session.close()

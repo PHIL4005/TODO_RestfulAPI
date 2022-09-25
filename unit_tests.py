@@ -1,8 +1,6 @@
 import unittest
 import app
-import requests
 import json
-from base64 import b64encode
 
 
 class UnitTests(unittest.TestCase):
@@ -18,63 +16,37 @@ class UnitTests(unittest.TestCase):
     def setUp(self):
         self.app = app.app.test_client()
         self.app.testing = True
-        # self.auth_header = {
-        #     'Authorization': 'Basic ' + b64encode("{0}:{1}".format('miguel', 'python'))
-        # }
-        self.task = {
-            'id': app.tasks[-1]['id'] + 1,
-            'title': 'title',
-            'description': 'description',
-            'done': False
+        self.auth_header = {
+            'Authorization': 'Basic ' + "{0}:{1}".format('miguel', 'python')
         }
-        self.data = {
-            "title": "title here",
-            "description": "description",
-            "done": False,
-        }
+        self.task = app.Todo
 
     def tearDown(self):
         pass
+
+    def test_400(self):
+        result = self.app.post('/todo/tasks')
+
+        self.assertEqual(result.status_code, 400)
+        self.assertIn(b'check', result.data)
 
     def test_404(self):
         result = self.app.get('/missing-page')
 
         self.assertEqual(result.status_code, 404)
-        self.assertIn('Not found', result.data)
+        self.assertIn(b'not found', result.data)
 
     def test_405(self):
         result = self.app.post('**')
 
         self.assertEqual(result.status_code, 405)
-        self.assertIn('The method is not allowed for the requested URL.', result.data)
+        self.assertIn(b'The method is not allowed for the requested URL.', result.data)
 
-    def test_403(self):
-        result = self.app.get('/todo/api/v1.0/tasks')
-
-        self.assertEqual(result.status_code, 403)
-        self.assertIn('Unauthorized access', result.data)
 
     def test_hello_world(self):
         result = self.app.get('/')
-        print(result.data)
+
         self.assertIn(b'Hello, World!', result.data)
-
-    def test_password(self):
-        response = app.get_password('miguel')
-
-        self.assertEqual('python', response)
-
-    def test_password_error(self):
-        response = app.get_password('test')
-
-        self.assertEqual(None, response)
-
-    # def test_public_task(self):
-
-    #     with app.app.app_context():
-    #         response = app.make_public_task(self.task)
-
-    #     self.assertIn('title', response)
 
     def test_get_all_tasks(self):
         response = self.app.get('/todo/tasks')
@@ -84,77 +56,108 @@ class UnitTests(unittest.TestCase):
     def test_get_task(self):
         response = self.app.get('/todo/tasks/1')
 
-        self.assertIn('Sample Task', response.data.decode("UTF-8"))
+        self.assertIn('uri', response.data.decode("UTF-8"))
 
     def test_get_nonexistent_task(self):
-        invalidTaskId = app.tasks[-1]['id'] + 1
-        response = self.app.get('/todo/api/v1.0/tasks/' + str(invalidTaskId), headers=self.auth_header)
+        response = self.app.get('/todo/tasks/-1')
 
-        self.assertIn('Not found', response.data)
+        self.assertIn(b'TODO not found', response.data)
 
     def test_post_task_400(self):
-        self.auth_header['title'] = "title here"
+        data = {"description": "no task name"}
+        response = self.app.post('/todo/tasks', headers=self.auth_header, data=json.dumps(data))
 
-        response = self.app.post('/todo/api/v1.0/tasks', headers=self.auth_header)
-
-        self.assertIn('Bad request', response.data)
+        self.assertIn(b'Please check the input format!', response.data)
 
     def test_post_task_ok(self):
-        response = self.app.post('/todo/api/v1.0/tasks', headers=self.auth_header, data=json.dumps(self.data),
+        data = {"name": "Created by unit test", "description": "Auto generated.."}
+        response = self.app.post('/todo/tasks', headers=self.auth_header, data=json.dumps(data),
                                  content_type='application/json')
 
-        self.assertIn("title here", response.data)
+        self.assertIn(b"uri", response.data)
 
     def test_put_task_ok(self):
-        response = self.app.put('/todo/api/v1.0/tasks/1', headers=self.auth_header, data=json.dumps(self.data),
+        data = {"description": "Updated by unit test"}
+        response = self.app.put('/todo/tasks/3', headers=self.auth_header, data=json.dumps(data),
                                 content_type='application/json')
 
-        self.assertIn("title here", response.data)
+        self.assertIn(b"uri", response.data)
 
     def test_put_task_404(self):
-        response = self.app.put('/todo/api/v1.0/tasks/0', headers=self.auth_header, data=json.dumps(self.data),
+        data = {"description": "Updated by unit test"}
+        response = self.app.put('/todo/tasks/0', headers=self.auth_header, data=json.dumps(data),
                                 content_type='application/json')
 
-        self.assertIn("Not found", response.data)
+        self.assertIn(b"not found", response.data)
 
     def test_put_task_400(self):
-        response = self.app.put('/todo/api/v1.0/tasks/1', headers=self.auth_header, data=json.dumps(self.data))
+        response = self.app.put('/todo/tasks/3', headers=self.auth_header, data=None)
 
         self.assertEqual(response.status_code, 400)
+        self.assertIn(b"Please check", response.data)
 
-    def test_put_task_400_no_unicode(self):
-        self.data["title"] = [1, 2, 3]
-        response = self.app.put('/todo/api/v1.0/tasks/1', headers=self.auth_header, data=json.dumps(self.data),
-                                content_type='application/json')
-
-        self.assertEqual(400, response.status_code)
-
-    def test_put_task_400_no_unicode_desc(self):
-        self.data["description"] = [1, 2, 3]
-        response = self.app.put('/todo/api/v1.0/tasks/1', headers=self.auth_header, data=json.dumps(self.data),
-                                content_type='application/json')
-
-        self.assertEqual(400, response.status_code)
-
-    def test_put_task_400_no_unicode_done(self):
-        self.data["done"] = [1, 2, 3]
-        response = self.app.put('/todo/api/v1.0/tasks/1', headers=self.auth_header, data=json.dumps(self.data),
+    def test_put_task_400_not_allowed_status(self):
+        data = {"status": "X"}
+        response = self.app.put('/todo/tasks/3', headers=self.auth_header, data=json.dumps(data),
                                 content_type='application/json')
 
         self.assertEqual(400, response.status_code)
 
     def test_delete_task_fail(self):
-        response = self.app.delete('/todo/api/v1.0/tasks/0', headers=self.auth_header,
+        response = self.app.delete('/todo/tasks/0', headers=self.auth_header,
                                    content_type='application/json')
 
         self.assertEqual(404, response.status_code)
 
-    def test_delete_task(self):
-        taskId = app.tasks[-1]['id']
-        response = self.app.delete('/todo/api/v1.0/tasks/' + str(taskId), headers=self.auth_header,
-                                   content_type='application/json')
+    # def test_delete_task(self):
+    #     # need to input an existed todo_id
+    #     taskId =
+    #     response = self.app.delete('/todo/tasks/' + str(taskId), headers=self.auth_header,
+    #                                content_type='application/json')
+    #
+    #     self.assertIn("true", response.data)
 
-        self.assertIn("true", response.data)
+    def test_filter_by_status(self):
+        data = {"status": "D"}
+        response = self.app.post('/todo/tasks/filter', headers=self.auth_header, data=json.dumps(data),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_filter_by_name(self):
+        data = {"name": "water"}
+        response = self.app.post('/todo/tasks/filter', headers=self.auth_header, data=json.dumps(data),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_filter_by_name_and_status(self):
+        data = {"name": "water", "status": "D"}
+        response = self.app.post('/todo/tasks/filter', headers=self.auth_header, data=json.dumps(data),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sort_by_due_date(self):
+        data = {"due_date": True}
+        response = self.app.post('/todo/tasks/sort', headers=self.auth_header, data=json.dumps(data),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sort_by_name(self):
+        data = {"name": True}
+        response = self.app.post('/todo/tasks/sort', headers=self.auth_header, data=json.dumps(data),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sort_by_name_and_due_date(self):
+        data = {"name": True, "due_date": True}
+        response = self.app.post('/todo/tasks/sort', headers=self.auth_header, data=json.dumps(data),
+                                 content_type='application/json')
+
+        self.assertEqual(response.status_code, 200)
 
 
 if __name__ == "__main__":
